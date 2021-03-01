@@ -1,0 +1,681 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: 'FloraOpt '
+  description: FloraOpt documentation
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Digital-AgencyAIR/FloraOpt/1.0.0
+  - description: API root
+    url: https://nskfloraopt.ru/mobile/api
+paths:
+  /user/sendCode:
+    get:
+      description: Отправляет одноразовый код на номер телефона
+      parameters:
+      - name: phone
+        in: query
+        description: Номер телефона пользователя
+        required: true
+        schema:
+          type: string
+        
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/UserMessage'
+                  - $ref: '#/components/schemas/Error'
+  /user/authCode:
+    get:
+      description: Авторизует пользователя на основе номера телефона и кода (пароля)
+      parameters:
+      - name: phone
+        in: query
+        description: Номер телефона пользователя
+        required: true
+        schema:
+          type: string
+      - name: code
+        in: query
+        description: Полученный код
+        required: true
+        schema:
+          type: string
+        
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/UserMessage2'
+                  - $ref: '#/components/schemas/Error'
+  /user/authHash:
+    get:
+      description: Авторизует пользователя по hash коду
+      parameters:
+      - name: hash
+        in: query
+        description: Hash код пользователя
+        required: true
+        schema:
+          type: string
+        
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/UserMessage2'
+                  - $ref: '#/components/schemas/Error'
+  /user/profile:
+    get:
+      description: Изменяет личные данные пользователя
+      parameters:
+      - name: hash
+        in: query
+        description: Hash код пользователя
+        required: true
+        schema:
+          type: string
+      - name: name
+        in: query
+        description: Имя пользователя
+        required: false
+        schema:
+          type: string
+      - name: surname
+        in: query
+        description: Фамилия пользователя
+        required: false
+        schema:
+          type: string
+      - name: patronymic
+        in: query
+        description: Отчество пользователя
+        required: false
+        schema:
+          type: string
+        
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Error'
+                  - $ref: '#/components/schemas/UserMessage2'
+  
+  /order/add:
+    get:
+      description: Добавляет заказ пользователя
+      parameters:
+      - name: hash
+        in: query
+        description: Hash код пользователя
+        required: true
+        schema:
+          type: string
+          
+      - name: delivery
+        in: query
+        description: ID службы доставки
+        required: true
+        schema:
+         type: integer
+          
+      - name: payment
+        in: query
+        description: ID платежной системы
+        required: true
+        schema:
+          type: integer
+          
+      - name: city
+        in: query
+        description: Название города
+        required: true
+        schema:
+          type: string  
+          
+      - name: products_id
+        in: query
+        description: Саисок id товаров
+        required: true
+        schema:
+          type: string 
+          
+      - name: delivery_date
+        in: query
+        description: Дата доставки
+        required: false
+        schema:
+          type: string
+      
+      - name: address
+        in: query
+        description: Адрес доставки
+        required: false
+        schema:
+          type: string
+          
+      - name: house
+        in: query
+        description: Дом
+        required: false
+        schema:
+          type: string
+         
+      - name: apartment
+        in: query
+        description: Квартира/офис
+        required: false
+        schema:
+          type: string  
+       
+      - name: stock
+        in: query
+        description: Пункт самовывоза
+        required: false
+        schema:
+          type: string
+          
+      - name: comment
+        in: query
+        description: Комментарий к заказу
+        required: false
+        schema:
+          type: string
+      
+      - name: card_number
+        in: query
+        description: Номер скидочной карты (не используется)
+        required: false
+        schema:
+          type: string
+          
+      - name: delivery_time
+        in: query
+        description: Время доставки (не используется)
+        required: false
+        schema:
+          type: string
+          
+      - name: contact_name
+        in: query
+        description: ФИО получателя
+        required: false
+        schema:
+          type: string
+          
+      - name: contact_phone
+        in: query
+        description: Контактный телефон (не используется)
+        required: false
+        schema:
+          type: string
+          
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Error'   
+                  - $ref: '#/components/schemas/OrderItem'
+  /order/userOrdersList:
+    get:
+      description: Получить список заказов пользователя
+      parameters:
+      - name: hash
+        in: query
+        description: Hash код пользователя
+        required: true
+        schema:
+          type: string
+          
+      - name: page
+        in: query
+        description: Номер страницы
+        required: false
+        schema:
+         type: integer
+          
+      - name: count_element
+        in: query
+        description: Количество элементов на странице
+        required: false
+        schema:
+          type: integer
+          
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count_elements:
+                    type: integer
+                    example: 194
+                  count_page:
+                    type: integer
+                    example: 20
+                oneOf:
+                  - $ref: '#/components/schemas/OrderItems'
+                  - $ref: '#/components/schemas/Error'
+  /order/deliveryList:
+    get:
+      description: Получить список доставок
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/DeliveryItems'
+                  - $ref: '#/components/schemas/Error'
+  /order/paySystemList:
+    get:
+      description: Получить список платежных систем
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/PaymentItems'
+                  - $ref: '#/components/schemas/Error'
+  /order/payed:
+    get:
+      description: Оплатить заказ
+      parameters:
+      - name: hash
+        in: query
+        description: Hash пользователя
+        required: true
+        schema:
+          type: string
+      - name: order
+        in: query
+        description: id заказа
+        required: true
+        schema:
+          type: integer
+      - name: invoice_number
+        in: query
+        description: ""
+        required: false
+        schema:
+          type: integer
+      - name: date
+        in: query
+        description: ""
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Payed'
+                  - $ref: '#/components/schemas/Error'
+  
+  /catalog/xmlList:
+    get:
+      description: Получить список товаров
+      responses:
+        '200':
+          description: OK
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Catalog'
+components:
+  schemas:
+    UserMessage:
+      type: object
+      properties:
+        info:
+          type: object
+          properties:
+            type:
+              type: string
+              example: ok
+            text: 
+              type: string
+              example: Текст ответа.
+    UserMessage2:
+      type: object
+      properties:
+        user_info:
+          type: object
+          properties:
+            site_id:
+              type: string
+              example: "1"
+            phone: 
+              type: string
+              example: "+7 (800) 555-3535"
+            first_name: 
+              type: string
+              example: "Name"
+            cart_number: 
+              type: string
+              example: "0001896"
+            token: 
+              type: string
+              example: "1d5666dsds455146"
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          example: error
+        text: 
+          type: string
+          example: Текст ошибки.
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "19949"
+        number: 
+          type: string
+          example: "19949"
+        total: 
+          type: integer
+          example: 2649
+        total_format: 
+          type: string
+          example: "2 649"
+        data_insert: 
+          type: string
+          example: "01.03.2021 11:37:18"
+        status: 
+          type: string
+          example: "Принят, ожидается оплата"
+        status_id: 
+          type: string
+          example: "N"
+        delivery: 
+          type: string
+          example: "Самовывоз"
+        delivery_id: 
+          type: string
+          example: "3"
+        isPayment: 
+          type: boolean
+          example: false
+        comment: 
+          type: string
+          example: "Комментарий"
+        payment_id: 
+          type: string
+          example: "1"
+        sumDelivery: 
+          type: integer
+          example: 1000
+        sumDelivery_format: 
+          type: string
+          example: "1 000"
+        products: 
+          type: object
+          properties:
+            id: 
+              type: string
+              example: "12032"
+            name: 
+              type: string
+              example: "Букет 55"
+            count: 
+              type: integer
+              example: 1
+            sum: 
+              type: integer
+              example: 2649
+            image: 
+              type: string
+              example: "https://www.nskfloraopt.ru/upload/iblock/919/wm_919702f58ec67ec5d0a786381bbb14e6.jpg"
+            total:
+              type: integer
+              example: 2649
+        totalCart: 
+          type: integer
+          example: 2649
+        totalCart_format: 
+          type: string
+          example: "2 649"
+        card: 
+          type: string
+          example: "N"
+    OrderItem:
+      type: object
+      properties:
+        order_info:
+          $ref: '#/components/schemas/Order'
+    OrderItems:
+      type: object
+      properties:
+        count_elements:
+          type: integer
+          example: 198
+        count_page:
+          type: integer
+          example: 10
+        order_info:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+    Delivery:
+      type: object
+      properties:
+        type:
+          type: integer
+          example: 1
+        text: 
+          type: string
+          example: "Без доставки"
+    DeliveryItems:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Delivery'
+    Payment:
+      type: object
+      properties:
+        type:
+          type: integer
+          example: 1
+        text: 
+          type: string
+          example: "Наличными"
+    PaymentItems:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payment'      
+    Payed:
+      type: object
+      properties:
+        result:
+          type: string
+          example: "Заказ оплачен."
+    Catalog:
+      type: object
+      properties:
+        КоммерческаяИнформация:
+          $ref: '#/components/schemas/ComercylInfo'
+    Property:
+      type: object
+      properties:
+        Свойство:
+          type: object
+          properties:
+            Ид:
+              type: string
+              example: "CML2_ACTIVE"
+            Наименование:
+              type: string
+              example: "БитриксАктивность"
+            Множественное:
+              type: boolean
+              example: false
+    PriceType:
+      type: object
+      properties:
+        ТипЦены:
+          type: object
+          properties:
+            Ид:
+              type: string
+              example: "SPECIALOFFER"
+            Наименование:
+              type: string
+              example: "SPECIALOFFER"
+    Offer:
+      type: object
+      properties:
+        Предложение:
+          type: object
+          properties:
+            Ид:
+              type: string
+              example: "8708"
+            Наименование:
+              type: string
+              example: "SPECIALOFFER"
+            Группы:
+              type: array
+              items: 
+                type: object
+                properties:
+                  Ид:
+                    type: string
+                    example: "1"
+            ЗначенияСвойств:
+              type: array
+              items: 
+                type: object
+                properties:
+                  ЗначенияСвойства:
+                    type: object
+                    properties:
+                      Ид:
+                        type: string
+                        example: "1"
+                      Значение:
+                        type: string
+                        example: "Значение 1"
+            Цены:
+              type: array
+              items: 
+                type: object
+                properties:
+                  Цена:
+                    type: object
+                    properties:
+                      ИдТипаЦены:
+                        type: string
+                        example: "Опт"
+                      ЦенаЗаЕдиницу:
+                        type: string
+                        example: "2565.00"
+                      Валюта:
+                        type: string
+                        example: "RUB"
+                      Единица:
+                        type: integer
+                        example: 5
+            Количество:
+              type: integer
+              example: -32
+    Group:
+      type: object
+      properties:
+        Группа:
+          type: object
+          properties:
+            Ид:
+              type: string
+              example: "1"
+            Наименование:
+              type: string
+              example: "Букеты"
+            БитриксАктивность:
+              type: boolean
+              example: true
+            БитриксСортировка:
+              type: integer
+              example: 100
+            БитриксКод:
+              type: string
+              example: "bukety"
+    OffersPackage:
+      type: object
+      properties:
+        Ид:
+          type: string
+          example: clothes_s1
+        ИдКлассификатора:
+          type: string
+          example: clothes_s1
+        БитриксКод:
+          type: string
+          example: clothes
+        Наименование:
+          type: string
+          example: Каталог
+        ТипыЦен:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceType'
+        Предложения:
+          type: array
+          items:
+            $ref: '#/components/schemas/Offer'
+    Classificator:
+      type: object
+      properties:
+        Ид:
+          type: string
+          example: clothes_s1
+        Наименование:
+          type: string
+          example: Каталог
+        Свойства:
+          type: array
+          items:
+            $ref: '#/components/schemas/Property'
+        Группы:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+    ComercylInfo:
+      type: object
+      properties:
+        Классификатор:
+           $ref: '#/components/schemas/Classificator'
+        ПакетПредложений:
+           $ref: '#/components/schemas/OffersPackage'
